@@ -49,3 +49,39 @@ export const DARK_THEME: ThemeColors = {
   inputBorder: '#e6b8cc',
   buttonText: '#1a1a1a',
 };
+
+export interface Anniversary {
+  name: string;
+  date: Date;
+}
+
+export interface Preference {
+  name: string;
+  isLike: boolean;
+}
+
+export interface Partner {
+  id: string;
+  firstName: string;
+  lastName: string;
+  nickName: string;
+  intimateName: string;
+  preferredName: 'firstName' | 'lastName' | 'nickName' | 'intimateName';
+  anniversaries: Anniversary[];
+  preferences: Preference[];
+  email: string;
+  phone: string;
+  address: string;
+  notes: string;
+}
+
+export const COMMON_PREFERENCES = [
+  'Coffee',
+  'Chocolate',
+  'Flowers',
+  'Movies',
+  'Spicy Food',
+  'Books',
+  'Wine',
+  'Loud Music',
+];

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Appearance } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { ThemeColors, LIGHT_THEME, DARK_THEME } from './types';
 
 interface ThemeContextType {
@@ -10,21 +11,38 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const THEME_KEY = 'userTheme';
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(
-    Appearance.getColorScheme() === 'dark'
-  );
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   useEffect(() => {
+    // Load saved theme on mount
+    SecureStore.getItemAsync(THEME_KEY).then((savedTheme) => {
+      if (savedTheme !== null) {
+        setIsDarkMode(savedTheme === 'dark');
+      } else {
+        setIsDarkMode(Appearance.getColorScheme() === 'dark');
+      }
+    });
+
     const listener = Appearance.addChangeListener(({ colorScheme }) => {
-      setIsDarkMode(colorScheme === 'dark');
+      if (!SecureStore.getItemAsync(THEME_KEY)) {
+        setIsDarkMode(colorScheme === 'dark');
+      }
     });
     return () => listener.remove();
   }, []);
 
   const theme = isDarkMode ? DARK_THEME : LIGHT_THEME;
 
-  const toggleTheme = () => setIsDarkMode((prev) => !prev);
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => {
+      const newMode = !prev;
+      SecureStore.setItemAsync(THEME_KEY, newMode ? 'dark' : 'light');
+      return newMode;
+    });
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, isDarkMode, toggleTheme }}>

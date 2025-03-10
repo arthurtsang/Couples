@@ -1,20 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MyIdeasScreen from './src/screens/MyIdeasScreen';
+import PartnerIdeasScreen from './src/screens/PartnerIdeasScreen';
+import PartnersScreen from './src/screens/PartnersScreen';
+import { ThemeProvider, useTheme } from './src/ThemeContext';
+import React from 'react';
 
-export default function App() {
+const Tab = createBottomTabNavigator();
+
+function AppContent() {
+  const { theme } = useTheme();
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: { backgroundColor: theme.tabBarBackground },
+          tabBarActiveTintColor: theme.tabBarActive,
+          tabBarInactiveTintColor: theme.text,
+        }}
+      >
+        <Tab.Screen name="My Ideas" component={MyIdeasScreen} />
+        <Tab.Screen name="Partner's Ideas" component={PartnerIdeasScreen} />
+        <Tab.Screen name="Partners" component={PartnersScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+}

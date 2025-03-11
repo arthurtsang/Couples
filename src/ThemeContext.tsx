@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Appearance } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { ThemeColors, LIGHT_THEME, DARK_THEME } from './types';
+import { LIGHT_THEME } from './theme/light';
+import { DARK_THEME } from './theme/dark';
+import { ThemeColors } from './types';
 
 interface ThemeContextType {
   theme: ThemeColors;
@@ -17,7 +19,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   useEffect(() => {
-    // Load saved theme on mount
     SecureStore.getItemAsync(THEME_KEY).then((savedTheme) => {
       if (savedTheme !== null) {
         setIsDarkMode(savedTheme === 'dark');

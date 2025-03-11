@@ -1,3 +1,4 @@
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MyIdeasScreen from './src/screens/MyIdeasScreen';
@@ -5,12 +6,12 @@ import PartnerIdeasScreen from './src/screens/PartnerIdeasScreen';
 import PartnersScreen from './src/screens/PartnersScreen';
 import { ThemeProvider, useTheme } from './src/ThemeContext';
 import { PartnerProvider, usePartner } from './src/PartnerContext';
-import React from 'react';
+import { LIGHT_THEME } from './src/theme/light'; // Import default theme
 
 const Tab = createBottomTabNavigator();
 
 function AppContent() {
-  const { theme } = useTheme();
+  const { theme = LIGHT_THEME } = useTheme(); // Default to LIGHT_THEME if undefined
   const { selectedPartner } = usePartner();
 
   return (
